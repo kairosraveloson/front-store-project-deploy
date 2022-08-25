@@ -15,7 +15,7 @@ export default function Offline() {
         Restaurant fermé
       </div>
       <div style={{ color: 'white', fontSize: '18px' }}>
-        Votre venue est hors ligne, bien que vos heures d'ouverture suggèrent le
+        Votre venue est hors ligne, bien que vos heures d&apos;ouverture suggèrent le
         contraire
       </div>
       <div>
