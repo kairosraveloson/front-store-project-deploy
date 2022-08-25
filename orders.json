@@ -1,0 +1,29 @@
+[{
+  "_id": {
+    "$oid": "62f9e079038280df29572d92"
+  },
+  "Order_id": "54911",
+  "Store_ID": "1568",
+  "User_ID": "1608",
+  "Date_createion": "15-08-2022",
+  "Current_state": "Created",
+  "is_delivery": true,
+  "delivery_information": {
+    "city_delivery": "Ontario",
+    "adress_delivery": "Lot 20 TER Soavinimerina",
+    "Delivery_cost": "20 €",
+    "Delivery_duration": "20 minutes",
+    "delivery_dispatched_time": "07:48"
+  },
+  "is_pickup": true,
+  "pickup_info": {
+    "preparation_finished_time": "10:25",
+    "whished_pickup_time": "10:25"
+  },
+  "is_book_table": true,
+  "table_info": {
+    "table_id": "1",
+    "table_size": "3",
+    "Table_reservation_cost": "20"
+  }
+}]
