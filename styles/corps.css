@@ -31,7 +31,10 @@
   overflow-y: auto;
   padding: 10px;
 }
-
+/*
+#finished_order {
+  background-color: red;
+}*/
 .tab_list_contenu {
   background-color: white;
   border: 2px solid #ddd;
@@ -71,14 +74,16 @@
   margin-right: 5px;
   border-radius: 5px;
   width: auto;
-  background-color: rgb(32, 33, 37);
+  background-color: transparent;
   border-radius: 5px;
+  padding: 5px;
+  overflow-y: auto;
   /* border: 2px solid white; */
 }
 
 #list_order {
   text-align: center;
-  width: 7%;
+  width: 14%;
   background-color: rgb(32, 33, 37);
   transition: width 500ms;
   display: none;
@@ -86,19 +91,19 @@
 
 #incoming_orders {
   text-align: center;
-  width: 43%;
+  width: 45%;
   background-color: rgb(32, 33, 37);
 }
 
 #outgoing_orders {
   text-align: center;
-  width: 43%;
+  width: 45%;
   background-color: rgb(32, 33, 37);
 }
 
 #ready_orders {
   text-align: center;
-  width: 14%;
+  width: 10%;
   background-color: rgb(32, 33, 37);
 }
 
