@@ -81,7 +81,7 @@ export default function Store() {
                     id="contenu_attente_liste"
                   >
                     {' '}
-                    <h5>#{order.Order_id}</h5>
+                    <h5>{order.Order_id}</h5>
                   </div>
                 );
               })}
