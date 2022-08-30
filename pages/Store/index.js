@@ -48,7 +48,7 @@ export default function Store() {
   }, []);
 
   function changeOrderState() {
-    fetch('http://localhost:4000/order').then((result) => {
+    fetch('https://eats-api-project.herokuapp.com/order').then((result) => {
       result.json().then((resp) => {
         setOrder_State(resp);
       });
@@ -58,7 +58,7 @@ export default function Store() {
   function UpdateOrders(id_Order) {
     // let id_Order = document.getElementById('numero_ticket').innerText;
     let item = { Current_state: 'Accepted' };
-    fetch(`http://localhost:4000/order/Orderstate/${String(id_Order)}`, {
+    fetch(`https://eats-api-project.herokuapp.com//order/Orderstate/${String(id_Order)}`, {
       //${id_Order}
       method: 'PUT',
       headers: {
@@ -74,7 +74,7 @@ export default function Store() {
   }
 
   const { data: andrasana } = useSWR(
-    'http://localhost:4000/order/created',
+    'https://eats-api-project.herokuapp.com//order/created',
     fetcher
   );
   const { data: mikarakara } = useSWR(
