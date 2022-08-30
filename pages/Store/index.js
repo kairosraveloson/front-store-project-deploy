@@ -232,7 +232,7 @@ export default function Store() {
                                         padding: '5px',
                                       }}
                                       id="commentaire_client"
-                                    ></div>
+                                    >{order.commentaire_order}</div>
                                   </td>
                                 </tr>
                               </tbody>
