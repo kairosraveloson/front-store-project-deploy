@@ -17,6 +17,10 @@
   background-color: rgb(32, 33, 37);
 }
 
+#contenu_attente_list:hover {
+  background-color: rgb(32, 33, 37);
+  color: white;
+}
 #list_contenu_order_nouvelles,
 #list_contenu_order_encours {
   height: 93%;
