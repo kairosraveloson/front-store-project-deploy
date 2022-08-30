@@ -7,15 +7,15 @@ body {
   background-color: rgb(246, 249, 255);
 }
 
-:is(body, #list_contenu_order_nouvelles, #scroll_list_articles, #scroll_list_articles_modal)::-webkit-scrollbar {
+:is(body, #list_contenu_order_nouvelles, #list_contenu_order_encours, #scroll_list_articles, #scroll_list_articles_modal)::-webkit-scrollbar {
   width: 10px;
 }
-:is(body, #list_contenu_order_nouvelles, #scroll_list_articles, #scroll_list_articles_modal)::-webkit-scrollbar-track {
+:is(body, #list_contenu_order_nouvelles, #list_contenu_order_encours, #scroll_list_articles, #scroll_list_articles_modal)::-webkit-scrollbar-track {
   background-color: rgba(168, 193, 237, 0.3);
   border-radius: 25px;
   margin-top: 3px;
 }
-:is(body, #list_contenu_order_nouvelles, #scroll_list_articles, #scroll_list_articles_modal)::-webkit-scrollbar-thumb {
+:is(body, #list_contenu_order_nouvelles, #list_contenu_order_encours, #scroll_list_articles, #scroll_list_articles_modal)::-webkit-scrollbar-thumb {
   background-color: rgba(0, 133, 200, 0.3);
   border: 1px solid rgba(0, 133, 200, 0.8);
   border-radius: 25px;
