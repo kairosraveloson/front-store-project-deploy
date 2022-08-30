@@ -11,18 +11,15 @@ import useSWR from 'swr';
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Store() {
+  var liste_article;
   const show_orders = (Order) => {
-    document.getElementById('commentaire_client').innerHTML =
-      Order.commentaire_order;
-    document.getElementById('telephone_client').innerHTML = Order.User_phone;
-    document.getElementById('intitule_client').innerHTML = Order.User_name;
-    document.getElementById('numero_ticket').innerHTML = '#' + Order.Order_id;
-
-    document.getElementById('TotalAmount_Order').innerHTML =
-      Order.Montant_total;
+    document.getElementById(
+      'liste_articles_ordered_' + Order.Order_id
+    ).innerHTML = '';
     const liste_article = new Array(Order.items_information.length);
     var liste_detail = '';
     liste_article = Order.items_information;
+
     for (var i = 0; i < Order.items_information.length; i++) {
       liste_detail =
         '<tr><td style="width: 15px,font-weight: bold,height: 10px"><b>' +
@@ -33,21 +30,52 @@ export default function Store() {
         liste_article[i].item_total_ttc +
         '$</b></td></tr>' +
         liste_detail;
-      /* "<tr><td>" +
-        liste_article[i].item_quantity +
-        "</td></tr>" +
-        liste_detail;*/
     }
 
-    document.getElementById('liste_articles_ordered').innerHTML = liste_detail;
+    document.getElementById(
+      'liste_articles_ordered_' + Order.Order_id
+    ).innerHTML = liste_detail;
   };
 
   const show_detailed_orders = (Order) => {
     document.getElementById('').innerHTML = '';
   };
 
+  const [Order_State, setOrder_State] = useState();
+
+  useEffect(() => {
+    changeOrderState();
+  }, []);
+
+  function changeOrderState() {
+    fetch('http://localhost:4000/order').then((result) => {
+      result.json().then((resp) => {
+        setOrder_State(resp);
+      });
+    });
+  }
+
+  function UpdateOrders(id_Order) {
+    // let id_Order = document.getElementById('numero_ticket').innerText;
+    let item = { Current_state: 'Accepted' };
+    fetch(`http://localhost:4000/order/Orderstate/${String(id_Order)}`, {
+      //${id_Order}
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    }).then((result) => {
+      result.json().then((resp) => {
+        console.log(resp);
+      });
+    });
+  }
+
   const { data } = useSWR(
-    'https://eats-api-project.herokuapp.com/order',
+    'http://localhost:4000/order/created',
+    //'https://eats-api-project.herokuapp.com/order',
     fetcher
   );
   if (!data) return 'Loading data ...';
@@ -98,212 +126,257 @@ export default function Store() {
               Détails commandes
             </div>
             <div id="list_contenu_order_nouvelles">
-              <Table className="tab_list_contenu table-borderless">
-                <tbody className="tb_contenu_order" style={{ height: '100%' }}>
-                  <tr style={{ height: '20vh' }}>
-                    <td>
-                      <Table
-                        className="table-borderless"
-                        style={{ backgroundColor: 'white', margin: '0' }}
+              {data.map((order) => {
+                return (
+                  <div
+                    key={order.Order_id}
+                    className="tab_list_contenu"
+                    style={{ marginBottom: '20px' }}
+                  >
+                    <Table
+                      className=" table-borderless"
+                      style={{ borderRadius: '20px' }}
+                    >
+                      <tbody
+                        className="tb_contenu_order"
+                        style={{ height: '100%' }}
                       >
-                        <tbody>
-                          <tr
-                            style={{
-                              textAlign: 'left',
-                              display: 'flex',
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              justifyContent: 'left',
-                            }}
-                          >
-                            <td>
-                              <b id="numero_ticket">#####</b>
-                            </td>
-                            <td>
-                              <b id="intitule_client">#####</b>
-                            </td>
-                            <td>
+                        <tr style={{ height: '18vh' }}>
+                          <td>
+                            <Table
+                              className="table-borderless"
+                              style={{
+                                backgroundColor: 'white',
+                                margin: '0',
+                                borderRadius: '5px',
+                              }}
+                            >
+                              <tbody>
+                                <tr
+                                  style={{
+                                    textAlign: 'left',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'left',
+                                  }}
+                                >
+                                  <td>
+                                    <b id="numero_ticket">{order.Order_id}</b>
+                                  </td>
+                                  <td>
+                                    <b id="intitule_client">
+                                      {order.User_name}
+                                    </b>
+                                  </td>
+                                  <td>
+                                    <div
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#Modal_en_cours"
+                                      style={{
+                                        backgroundColor: '#BBDEFB',
+                                        width: '50px',
+                                        height: '50px',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: '50px',
+                                        cursor: 'pointer',
+                                      }}
+                                    >
+                                      <i className="bi bi-arrows-fullscreen"></i>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div
+                                      style={{
+                                        backgroundColor: '#BBDEFB',
+                                        width: '50px',
+                                        height: '50px',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: '50px',
+                                        cursor: 'pointer',
+                                      }}
+                                    >
+                                      <i
+                                        className="bi bi-messenger"
+                                        style={{ color: '#2979ff' }}
+                                      ></i>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colSpan={4} style={{ textAlign: 'left' }}>
+                                    {' '}
+                                    <b
+                                      style={{ color: '#888' }}
+                                      id="telephone_client"
+                                    >
+                                      {order.User_phone}
+                                    </b>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colSpan={4}>
+                                    <div
+                                      style={{
+                                        backgroundColor: 'rgb(255, 204, 153)',
+                                        borderRadius: '5',
+                                        height: '75px',
+                                        borderRadius: '5px',
+                                        textAlign: 'left',
+                                        padding: '5px',
+                                      }}
+                                      id="commentaire_client"
+                                    ></div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </Table>
+                          </td>
+                          <td style={{ width: '25vh' }}>
+                            <div
+                              style={{
+                                height: '12vh',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: '50px',
+                              }}
+                            >
                               <div
-                                data-bs-toggle="modal"
-                                data-bs-target="#Modal_en_cours"
                                 style={{
-                                  backgroundColor: '#BBDEFB',
-                                  width: '50px',
-                                  height: '50px',
-                                  display: 'flex',
-                                  flexDirection: 'row',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
+                                  backgroundColor: 'rgb(47, 255, 64)',
+                                  width: '75px',
+                                  height: '75px',
+                                  padding: '5px',
                                   borderRadius: '50px',
-                                  cursor: 'pointer',
                                 }}
                               >
-                                <i className="bi bi-arrows-fullscreen"></i>
+                                <div
+                                  style={{
+                                    backgroundColor: 'white',
+                                    width: '65px',
+                                    height: '65px',
+                                    borderRadius: '50px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <h2>5</h2>
+                                </div>
                               </div>
-                            </td>
-                            <td>
+                            </div>
+                            <div
+                              style={{
+                                height: '12vh',
+                                marginTop: '5px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
                               <div
+                                className="card-icon rounded-circle d-flex align-items-center justify-content-center"
                                 style={{
-                                  backgroundColor: '#BBDEFB',
-                                  width: '50px',
-                                  height: '50px',
-                                  display: 'flex',
-                                  flexDirection: 'row',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  borderRadius: '50px',
-                                  cursor: 'pointer',
+                                  backgroundColor: '#ddd',
+                                  width: '70px',
+                                  height: '70px',
                                 }}
                               >
                                 <i
-                                  className="bi bi-messenger"
-                                  style={{ color: '#2979ff' }}
+                                  className="bi bi-cart-check"
+                                  style={{
+                                    color: '#333',
+                                    fontSize: '32px',
+                                    fontWeight: '400',
+                                  }}
                                 ></i>
                               </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={4} style={{ textAlign: 'left' }}>
-                              {' '}
-                              <b
-                                style={{ color: '#888' }}
-                                id="telephone_client"
-                              >
-                                ##########
-                              </b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={4}>
-                              <div
-                                style={{
-                                  backgroundColor: 'rgb(255, 204, 153)',
-                                  borderRadius: '5',
-                                  height: '90px',
-                                  borderRadius: '5px',
-                                  textAlign: 'left',
-                                  padding: '5px',
-                                }}
-                                id="commentaire_client"
-                              ></div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </td>
-                    <td style={{ width: '25vh' }}>
-                      <div
-                        style={{
-                          height: '12vh',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          borderRadius: '50px',
-                        }}
-                      >
-                        <div
-                          style={{
-                            backgroundColor: 'rgb(47, 255, 64)',
-                            width: '75px',
-                            height: '75px',
-                            padding: '5px',
-                            borderRadius: '50px',
-                          }}
-                        >
-                          <div
+                              <b>Delivery</b>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            colSpan={2}
                             style={{
-                              backgroundColor: 'white',
-                              width: '65px',
-                              height: '65px',
-                              borderRadius: '50px',
-                              display: 'flex',
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignItems: 'center',
+                              textAlign: 'left',
                             }}
                           >
-                            <h2>5</h2>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          height: '12vh',
-                          marginTop: '5px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <div
-                          className="card-icon rounded-circle d-flex align-items-center justify-content-center"
-                          style={{
-                            backgroundColor: '#ddd',
-                            width: '70px',
-                            height: '70px',
-                          }}
-                        >
-                          <i
-                            className="bi bi-cart-check"
-                            style={{
-                              color: '#333',
-                              fontSize: '32px',
-                              fontWeight: '400',
-                            }}
-                          ></i>
-                        </div>
-                        <b>Delivery</b>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      colSpan={2}
-                      style={{
-                        height: '32vh',
-                        textAlign: 'left',
-                      }}
-                    >
-                      <div id="scroll_list_articles" style={{ height: '30vh' }}>
-                        <Table className="table table-border">
-                          <tbody id="liste_articles_ordered"></tbody>
-                        </Table>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr style={{ textAlign: 'left' }}>
-                    <td colSpan={2}>
-                      <b>Total amount ($) : </b>
-                      <b id="TotalAmount_Order"> </b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ textAlign: 'center' }} colSpan={2}>
-                      <button
-                        className="btn btn-primary"
-                        style={{ width: '50vh' }}
-                        id="validateOrder"
-                      >
-                        <i className="bi bi-fast-forward"></i> Accept
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ textAlign: 'center' }} colSpan={2}>
-                      <button
-                        data-bs-toggle="modal"
-                        data-bs-target="#Modal_si_refus"
-                        className="btn btn-danger"
-                        style={{ width: '50vh' }}
-                      >
-                        <i className="bi bi-trash"></i> Rejeter
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
+                            <div id="scroll_list_articles">
+                              <Table className="table table-border">
+                                <tbody
+                                  id={`liste_articles_ordered_${order.Order_id}`}
+                                >
+                                  {order.items_information.map((liste) => {
+                                    return (
+                                      <>
+                                        <tr key={liste.item_id}>
+                                          <td>
+                                            <b>{liste.item_quantity}</b>
+                                          </td>
+                                          <td>
+                                            <b>x</b>
+                                          </td>
+                                          <td>
+                                            <b>{liste.item_description}</b>
+                                          </td>
+                                          <td>
+                                            <b>{liste.item_total_ttc}$</b>
+                                          </td>
+                                        </tr>
+                                      </>
+                                    );
+                                  })}
+                                </tbody>
+                              </Table>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr style={{ textAlign: 'left' }}>
+                          <td colSpan={2}>
+                            <b>Total amount ($) : </b>
+                            <b id="TotalAmount_Order">{order.Montant_total} </b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ textAlign: 'center' }} colSpan={2}>
+                            <button
+                              className="btn btn-primary"
+                              style={{ width: '50vh' }}
+                              id="validateOrder"
+                              onClick={() => UpdateOrders(order.Order_id)}
+                            >
+                              <i className="bi bi-fast-forward"></i> Accepter
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ textAlign: 'center' }} colSpan={2}>
+                            <button
+                              data-bs-toggle="modal"
+                              data-bs-target="#Modal_si_refus"
+                              className="btn btn-danger"
+                              style={{ width: '50vh' }}
+                            >
+                              <i className="bi bi-trash"></i> Rejeter
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                );
+              })}
 
               {/* ******************************************************************************************* */}
               <div
