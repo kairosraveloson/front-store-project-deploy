@@ -1,87 +1,84 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import Barre from '../../component/barre';
-import { Table } from 'reactstrap';
+import Head from "next/head";
+import Image from "next/image";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import Barre from "../../component/barre";
+import { Table } from "reactstrap";
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import useSWR from 'swr';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import useSWR from "swr";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Store() {
-  var liste_article;
-  const show_orders = (Order) => {
-    document.getElementById(
-      'liste_articles_ordered_' + Order.Order_id
-    ).innerHTML = '';
-    const liste_article = new Array(Order.items_information.length);
-    var liste_detail = '';
-    liste_article = Order.items_information;
-
-    for (var i = 0; i < Order.items_information.length; i++) {
-      liste_detail =
-        '<tr><td style="width: 15px,font-weight: bold,height: 10px"><b>' +
-        liste_article[i].item_quantity +
-        '</b></td><td><b>x</b></td> <td style="font-weight: bold,text-align: left"> <b>' +
-        liste_article[i].item_description +
-        ' </b></td><td style="fontWeight: bold,text-align: left"><b>' +
-        liste_article[i].item_total_ttc +
-        '$</b></td></tr>' +
-        liste_detail;
-    }
-
-    document.getElementById(
-      'liste_articles_ordered_' + Order.Order_id
-    ).innerHTML = liste_detail;
-  };
-
-  const show_detailed_orders = (Order) => {
-    document.getElementById('').innerHTML = '';
-  };
-
-  const [Order_State, setOrder_State] = useState();
-
-  useEffect(() => {
-    changeOrderState();
-  }, []);
-
   function changeOrderState() {
-    fetch('https://eats-api-project.herokuapp.com/order').then((result) => {
+    fetch("https://eats-api-project.herokuapp.com/order").then((result) => {
       result.json().then((resp) => {
         setOrder_State(resp);
       });
     });
   }
 
-  function UpdateOrders(id_Order) {
+  function UpdateOrders(id_Order, valeur) {
     // let id_Order = document.getElementById('numero_ticket').innerText;
-    let item = { Current_state: 'Accepted' };
-    fetch(`https://eats-api-project.herokuapp.com//order/Orderstate/${String(id_Order)}`, {
-      //${id_Order}
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(item),
-    }).then((result) => {
+    let item = { Current_state: valeur };
+    fetch(
+      `https://eats-api-project.herokuapp.com/order/Orderstate/${String(
+        id_Order
+      )}`,
+      {
+        //${id_Order}
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(item),
+      }
+    ).then((result) => {
       result.json().then((resp) => {
         console.log(resp);
       });
     });
   }
 
+  /*
+  function UpdateOrders(id_Order) {
+    // let id_Order = document.getElementById('numero_ticket').innerText;
+    // let item = { Current_state: "valeur" };
+    fetch(`http://localhost:4000/order/delete/${String(id_Order)}`, {
+      //${id_Order}
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      //  body: JSON.stringify(item),
+    }).then((result) => {
+      result.json().then((resp) => {
+        console.log(
+          `Suppression de la commande N°${id_Order} effectué avec succés`
+        );
+      });
+    });
+  }*/
+
   const { data: andrasana } = useSWR(
-    'https://eats-api-project.herokuapp.com//order/created',
-    fetcher
+    "https://eats-api-project.herokuapp.com/order/created",
+    fetcher,
+    { refreshInterval: 1000 }
   );
   const { data: mikarakara } = useSWR(
-    'http://localhost:4000/order/accepted',
-    fetcher
+    "https://eats-api-project.herokuapp.com/order/accepted",
+    fetcher,
+    { refreshInterval: 1000 }
   );
-  if (!andrasana && !mikarakara) return 'Loading data ...';
+  const { data: vita } = useSWR(
+    "https://eats-api-project.herokuapp.com/order/finished",
+    fetcher,
+    { refreshInterval: 1000 }
+  );
+  if (!andrasana && !mikarakara && !vita) return "Loading data ...";
   return (
     <>
       <Barre />
@@ -91,9 +88,9 @@ export default function Store() {
           <div className="etat_orders" id="list_order">
             <div
               style={{
-                color: 'white',
-                fontWeight: '500',
-                marginTop: '10px',
+                color: "white",
+                fontWeight: "500",
+                marginTop: "10px",
               }}
             >
               Commandes
@@ -104,14 +101,14 @@ export default function Store() {
                   <div
                     key={order.Order_id}
                     style={{
-                      border: '2px solid #eee',
-                      cursor: 'pointer',
-                      padding: '5px',
+                      border: "2px solid #eee",
+                      cursor: "pointer",
+                      padding: "5px",
                     }}
                     onClick={() => show_orders(order)}
                     id="contenu_attente_liste"
                   >
-                    {' '}
+                    {" "}
                     <h5>{order.Order_id}</h5>
                   </div>
                 );
@@ -121,9 +118,9 @@ export default function Store() {
           <div className="etat_orders" id="incoming_orders">
             <div
               style={{
-                color: 'white',
-                fontWeight: '500',
-                marginTop: '10px',
+                color: "white",
+                fontWeight: "500",
+                marginTop: "10px",
               }}
             >
               Détails commandes
@@ -134,34 +131,34 @@ export default function Store() {
                   <div
                     key={order.Order_id}
                     className="tab_list_contenu"
-                    style={{ marginBottom: '20px' }}
+                    style={{ marginBottom: "20px" }}
                   >
                     <Table
                       className=" table-borderless"
-                      style={{ borderRadius: '20px' }}
+                      style={{ borderRadius: "20px" }}
                     >
                       <tbody
                         className="tb_contenu_order"
-                        style={{ height: '100%' }}
+                        style={{ height: "100%" }}
                       >
-                        <tr style={{ height: '18vh' }}>
+                        <tr style={{ height: "18vh" }}>
                           <td>
                             <Table
                               className="table-borderless"
                               style={{
-                                backgroundColor: 'white',
-                                margin: '0',
-                                borderRadius: '5px',
+                                backgroundColor: "white",
+                                margin: "0",
+                                borderRadius: "5px",
                               }}
                             >
                               <tbody>
                                 <tr
                                   style={{
-                                    textAlign: 'left',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'left',
+                                    textAlign: "left",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "left",
                                   }}
                                 >
                                   <td>
@@ -177,15 +174,15 @@ export default function Store() {
                                       data-bs-toggle="modal"
                                       data-bs-target="#Modal_en_cours"
                                       style={{
-                                        backgroundColor: '#BBDEFB',
-                                        width: '50px',
-                                        height: '50px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        borderRadius: '50px',
-                                        cursor: 'pointer',
+                                        backgroundColor: "#BBDEFB",
+                                        width: "50px",
+                                        height: "50px",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        borderRadius: "50px",
+                                        cursor: "pointer",
                                       }}
                                     >
                                       <i className="bi bi-arrows-fullscreen"></i>
@@ -194,29 +191,29 @@ export default function Store() {
                                   <td>
                                     <div
                                       style={{
-                                        backgroundColor: '#BBDEFB',
-                                        width: '50px',
-                                        height: '50px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        borderRadius: '50px',
-                                        cursor: 'pointer',
+                                        backgroundColor: "#BBDEFB",
+                                        width: "50px",
+                                        height: "50px",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        borderRadius: "50px",
+                                        cursor: "pointer",
                                       }}
                                     >
                                       <i
                                         className="bi bi-messenger"
-                                        style={{ color: '#2979ff' }}
+                                        style={{ color: "#2979ff" }}
                                       ></i>
                                     </div>
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td colSpan={4} style={{ textAlign: 'left' }}>
-                                    {' '}
+                                  <td colSpan={4} style={{ textAlign: "left" }}>
+                                    {" "}
                                     <b
-                                      style={{ color: '#888' }}
+                                      style={{ color: "#888" }}
                                       id="telephone_client"
                                     >
                                       {order.User_phone}
@@ -227,12 +224,12 @@ export default function Store() {
                                   <td colSpan={4}>
                                     <div
                                       style={{
-                                        backgroundColor: 'rgb(255, 204, 153)',
-                                        borderRadius: '5',
-                                        height: '75px',
-                                        borderRadius: '5px',
-                                        textAlign: 'left',
-                                        padding: '5px',
+                                        backgroundColor: "rgb(255, 204, 153)",
+                                        borderRadius: "5",
+                                        height: "75px",
+                                        borderRadius: "5px",
+                                        textAlign: "left",
+                                        padding: "5px",
                                       }}
                                       id="commentaire_client"
                                     >
@@ -243,36 +240,36 @@ export default function Store() {
                               </tbody>
                             </Table>
                           </td>
-                          <td style={{ width: '25vh' }}>
+                          <td style={{ width: "25vh" }}>
                             <div
                               style={{
-                                height: '12vh',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '50px',
+                                height: "12vh",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderRadius: "50px",
                               }}
                             >
                               <div
                                 style={{
-                                  backgroundColor: 'rgb(47, 255, 64)',
-                                  width: '75px',
-                                  height: '75px',
-                                  padding: '5px',
-                                  borderRadius: '50px',
+                                  backgroundColor: "rgb(47, 255, 64)",
+                                  width: "75px",
+                                  height: "75px",
+                                  padding: "5px",
+                                  borderRadius: "50px",
                                 }}
                               >
                                 <div
                                   style={{
-                                    backgroundColor: 'white',
-                                    width: '65px',
-                                    height: '65px',
-                                    borderRadius: '50px',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+                                    backgroundColor: "white",
+                                    width: "65px",
+                                    height: "65px",
+                                    borderRadius: "50px",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                   }}
                                 >
                                   <h2>5</h2>
@@ -281,28 +278,28 @@ export default function Store() {
                             </div>
                             <div
                               style={{
-                                height: '12vh',
-                                marginTop: '5px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
+                                height: "12vh",
+                                marginTop: "5px",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
                               <div
                                 className="card-icon rounded-circle d-flex align-items-center justify-content-center"
                                 style={{
-                                  backgroundColor: '#ddd',
-                                  width: '70px',
-                                  height: '70px',
+                                  backgroundColor: "#ddd",
+                                  width: "70px",
+                                  height: "70px",
                                 }}
                               >
                                 <i
                                   className="bi bi-cart-check"
                                   style={{
-                                    color: '#333',
-                                    fontSize: '32px',
-                                    fontWeight: '400',
+                                    color: "#333",
+                                    fontSize: "32px",
+                                    fontWeight: "400",
                                   }}
                                 ></i>
                               </div>
@@ -314,7 +311,7 @@ export default function Store() {
                           <td
                             colSpan={2}
                             style={{
-                              textAlign: 'left',
+                              textAlign: "left",
                             }}
                           >
                             <div id="scroll_list_articles">
@@ -347,31 +344,33 @@ export default function Store() {
                             </div>
                           </td>
                         </tr>
-                        <tr style={{ textAlign: 'left' }}>
+                        <tr style={{ textAlign: "left" }}>
                           <td colSpan={2}>
                             <b>Total amount ($) : </b>
                             <b id="TotalAmount_Order">{order.Montant_total} </b>
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ textAlign: 'center' }} colSpan={2}>
+                          <td style={{ textAlign: "center" }} colSpan={2}>
                             <button
                               className="btn btn-primary"
-                              style={{ width: '50vh' }}
+                              style={{ width: "50vh" }}
                               id="validateOrder"
-                              onClick={() => UpdateOrders(order.Order_id)}
+                              onClick={() =>
+                                UpdateOrders(order.Order_id, "Accepted")
+                              }
                             >
                               <i className="bi bi-fast-forward"></i> Accepter
                             </button>
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ textAlign: 'center' }} colSpan={2}>
+                          <td style={{ textAlign: "center" }} colSpan={2}>
                             <button
                               data-bs-toggle="modal"
                               data-bs-target="#Modal_si_refus"
                               className="btn btn-danger"
-                              style={{ width: '50vh' }}
+                              style={{ width: "50vh" }}
                             >
                               <i className="bi bi-trash"></i> Rejeter
                             </button>
@@ -395,18 +394,18 @@ export default function Store() {
                   <div
                     className="modal-content"
                     style={{
-                      backgroundColor: 'transparent',
-                      borderStyle: 'none',
-                      opacity: '1',
+                      backgroundColor: "transparent",
+                      borderStyle: "none",
+                      opacity: "1",
                     }}
                   >
                     <div
                       className="modal-header center_container"
                       style={{
-                        height: '200px',
-                        backgroundColor: 'transparent',
-                        borderStyle: 'none',
-                        color: 'white',
+                        height: "200px",
+                        backgroundColor: "transparent",
+                        borderStyle: "none",
+                        color: "white",
                       }}
                     >
                       <br />
@@ -426,29 +425,29 @@ export default function Store() {
                     <div
                       className="modal-body"
                       style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                       id="reject_modal_show"
                     >
                       <div
                         className="center_container"
-                        style={{ padding: '5px' }}
+                        style={{ padding: "5px" }}
                       >
-                        <h4 style={{ fontWeight: '700' }}>
+                        <h4 style={{ fontWeight: "700" }}>
                           <i className="bi bi-clock"></i> Bientôt fermé
                         </h4>
                         <div
                           style={{
-                            backgroundColor: 'rgb(255, 204, 153)',
-                            borderRadius: '5',
-                            height: '120px',
-                            borderRadius: '15px',
-                            textAlign: 'center',
-                            padding: '10px',
-                            margin: '20px',
+                            backgroundColor: "rgb(255, 204, 153)",
+                            borderRadius: "5",
+                            height: "120px",
+                            borderRadius: "15px",
+                            textAlign: "center",
+                            padding: "10px",
+                            margin: "20px",
                           }}
                         >
                           Malheureusement, nous n&apos;avons plus le temps de
@@ -458,10 +457,10 @@ export default function Store() {
                           type="button"
                           className="btn btn-lg"
                           style={{
-                            backgroundColor: 'rgb(255, 119, 0)',
-                            fontWeight: '500',
-                            fontSize: '16px',
-                            color: 'white',
+                            backgroundColor: "rgb(255, 119, 0)",
+                            fontWeight: "500",
+                            fontSize: "16px",
+                            color: "white",
                           }}
                         >
                           Rejeter la commande
@@ -469,20 +468,20 @@ export default function Store() {
                       </div>
                       <div
                         className="center_container"
-                        style={{ padding: '5px' }}
+                        style={{ padding: "5px" }}
                       >
-                        <h4 style={{ fontWeight: '700' }}>
+                        <h4 style={{ fontWeight: "700" }}>
                           <i className="bi bi-clock"></i> Stock indisponible
                         </h4>
                         <div
                           style={{
-                            backgroundColor: 'rgb(255, 204, 153)',
-                            borderRadius: '5',
-                            height: '120px',
-                            borderRadius: '15px',
-                            textAlign: 'center',
-                            padding: '10px',
-                            margin: '20px',
+                            backgroundColor: "rgb(255, 204, 153)",
+                            borderRadius: "5",
+                            height: "120px",
+                            borderRadius: "15px",
+                            textAlign: "center",
+                            padding: "10px",
+                            margin: "20px",
                           }}
                         >
                           Malheureusement, nous n&apos;avons plus le temps de
@@ -492,10 +491,10 @@ export default function Store() {
                           type="button"
                           className="btn btn-lg"
                           style={{
-                            backgroundColor: 'rgb(255, 119, 0)',
-                            fontWeight: '500',
-                            fontSize: '16px',
-                            color: 'white',
+                            backgroundColor: "rgb(255, 119, 0)",
+                            fontWeight: "500",
+                            fontSize: "16px",
+                            color: "white",
                           }}
                         >
                           Rejeter la commande
@@ -503,19 +502,19 @@ export default function Store() {
                       </div>
                       <div
                         className="center_container"
-                        style={{ padding: '5px' }}
+                        style={{ padding: "5px" }}
                       >
-                        <h4 style={{ fontWeight: '700' }}>
+                        <h4 style={{ fontWeight: "700" }}>
                           <i className="bi bi-clock"></i> Autres raisons
                         </h4>
                         <div
                           style={{
-                            borderRadius: '5',
-                            height: '120px',
-                            borderRadius: '15px',
-                            textAlign: 'center',
-                            padding: '10px',
-                            margin: '20px',
+                            borderRadius: "5",
+                            height: "120px",
+                            borderRadius: "15px",
+                            textAlign: "center",
+                            padding: "10px",
+                            margin: "20px",
                           }}
                         >
                           <textarea
@@ -530,10 +529,10 @@ export default function Store() {
                           type="button"
                           className="btn btn-lg"
                           style={{
-                            backgroundColor: 'rgb(255, 119, 0)',
-                            fontWeight: '500',
-                            fontSize: '16px',
-                            color: 'white',
+                            backgroundColor: "rgb(255, 119, 0)",
+                            fontWeight: "500",
+                            fontSize: "16px",
+                            color: "white",
                           }}
                         >
                           Rejeter la commande
@@ -543,12 +542,12 @@ export default function Store() {
                     <div
                       className="modal-footer"
                       style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'transparent',
-                        borderStyle: 'none',
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "transparent",
+                        borderStyle: "none",
                       }}
                     >
                       <button
@@ -577,7 +576,7 @@ export default function Store() {
                       <h5
                         className="modal-title"
                         id="exampleModalLabel"
-                        style={{ color: '#012970' }}
+                        style={{ color: "#012970" }}
                       >
                         Détails de la commande
                       </h5>
@@ -591,19 +590,19 @@ export default function Store() {
                     <div className="modal-body">
                       <Table className="table table-borderless">
                         <tbody>
-                          <tr style={{ height: '25vh' }}>
+                          <tr style={{ height: "25vh" }}>
                             <td
                               style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'top',
-                                justifyContent: 'top',
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "top",
+                                justifyContent: "top",
                               }}
                             >
                               <div
                                 style={{
-                                  textAlign: 'left',
-                                  width: '10vw',
+                                  textAlign: "left",
+                                  width: "10vw",
                                 }}
                               >
                                 Commande N° <br />
@@ -617,8 +616,8 @@ export default function Store() {
                               </div>
                               <div
                                 style={{
-                                  textAlign: 'left',
-                                  width: '18vw',
+                                  textAlign: "left",
+                                  width: "18vw",
                                 }}
                               >
                                 <b>103</b> <br />
@@ -632,12 +631,12 @@ export default function Store() {
                               </div>
                               <div
                                 style={{
-                                  textAlign: 'left',
-                                  width: '18vw',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'top',
-                                  justifyContent: 'top',
+                                  textAlign: "left",
+                                  width: "18vw",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "top",
+                                  justifyContent: "top",
                                 }}
                               >
                                 <b>Motif de refus</b>
@@ -654,45 +653,45 @@ export default function Store() {
                             <td colSpan={3}>
                               <div
                                 style={{
-                                  display: 'flex',
-                                  flexDirection: 'row',
-                                  alignItems: 'center',
-                                  justifyContent: 'right',
-                                  backgroundColor: '#CCC',
-                                  fontWeignt: 'bold',
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  justifyContent: "right",
+                                  backgroundColor: "#CCC",
+                                  fontWeignt: "bold",
                                 }}
                               >
                                 <span
                                   style={{
-                                    width: '25vh',
+                                    width: "25vh",
                                   }}
                                 >
                                   <b>Référence</b>
                                 </span>
                                 <span
                                   style={{
-                                    width: '33vh',
+                                    width: "33vh",
                                   }}
                                 >
                                   <b>Désignation</b>
                                 </span>
                                 <span
                                   style={{
-                                    width: '12vh',
+                                    width: "12vh",
                                   }}
                                 >
                                   <b>Quantité</b>
                                 </span>
                                 <span
                                   style={{
-                                    width: '12vh',
+                                    width: "12vh",
                                   }}
                                 >
                                   <b>Prix</b>
                                 </span>
                                 <span
                                   style={{
-                                    width: '18vh',
+                                    width: "18vh",
                                   }}
                                 >
                                   <b>Montant TTC</b>
@@ -700,7 +699,7 @@ export default function Store() {
                               </div>
                               <div
                                 id="scroll_list_articles_modal"
-                                style={{ height: '35vh' }}
+                                style={{ height: "35vh" }}
                               >
                                 <Table className="table">
                                   <tbody
@@ -710,187 +709,187 @@ export default function Store() {
                                     <tr>
                                       <td>ART001</td>
                                       <td>Hamburger</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,6
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,6
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>ART002</td>
-                                      <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>ART002</td>
-                                      <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>ART002</td>
-                                      <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>ART002</td>
-                                      <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>ART002</td>
-                                      <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>ART002</td>
-                                      <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
-                                        2,99
-                                      </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART002</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>ART002</td>
+                                      <td>Nebab Kebab</td>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>ART002</td>
+                                      <td>Nebab Kebab</td>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>ART002</td>
+                                      <td>Nebab Kebab</td>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>ART002</td>
+                                      <td>Nebab Kebab</td>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>ART002</td>
+                                      <td>Nebab Kebab</td>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>ART002</td>
+                                      <td>Nebab Kebab</td>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
+                                        2,99
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
                                         2,99
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART003</td>
                                       <td>Mojito</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         1,32
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         1,32
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>ART004</td>
                                       <td>Nebab Kebab</td>
-                                      <td style={{ textAlign: 'center' }}>1</td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>1</td>
+                                      <td style={{ textAlign: "center" }}>
                                         2.05
                                       </td>
-                                      <td style={{ textAlign: 'center' }}>
+                                      <td style={{ textAlign: "center" }}>
                                         2,05
                                       </td>
                                     </tr>
@@ -899,10 +898,10 @@ export default function Store() {
                               </div>
                             </td>
                           </tr>
-                          <tr style={{ textAlign: 'center' }}>
+                          <tr style={{ textAlign: "center" }}>
                             <td>
-                              {' '}
-                              <b>Total TTC ($) : 258</b>{' '}
+                              {" "}
+                              <b>Total TTC ($) : 258</b>{" "}
                             </td>
                           </tr>
                         </tbody>
@@ -928,9 +927,9 @@ export default function Store() {
           <div className="etat_orders" id="outgoing_orders">
             <div
               style={{
-                color: 'white',
-                fontWeight: '500',
-                marginTop: '10px',
+                color: "white",
+                fontWeight: "500",
+                marginTop: "10px",
               }}
             >
               Commandes en cours
@@ -941,34 +940,34 @@ export default function Store() {
                   <div
                     key={order.Order_id}
                     className="tab_list_contenu"
-                    style={{ marginBottom: '20px' }}
+                    style={{ marginBottom: "20px" }}
                   >
                     <Table
                       className=" table-borderless"
-                      style={{ borderRadius: '20px' }}
+                      style={{ borderRadius: "20px" }}
                     >
                       <tbody
                         className="tb_contenu_order"
-                        style={{ height: '100%' }}
+                        style={{ height: "100%" }}
                       >
-                        <tr style={{ height: '18vh' }}>
+                        <tr style={{ height: "18vh" }}>
                           <td>
                             <Table
                               className="table-borderless"
                               style={{
-                                backgroundColor: 'white',
-                                margin: '0',
-                                borderRadius: '5px',
+                                backgroundColor: "white",
+                                margin: "0",
+                                borderRadius: "5px",
                               }}
                             >
                               <tbody>
                                 <tr
                                   style={{
-                                    textAlign: 'left',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'left',
+                                    textAlign: "left",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "left",
                                   }}
                                 >
                                   <td>
@@ -984,15 +983,15 @@ export default function Store() {
                                       data-bs-toggle="modal"
                                       data-bs-target="#Modal_en_cours"
                                       style={{
-                                        backgroundColor: '#BBDEFB',
-                                        width: '50px',
-                                        height: '50px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        borderRadius: '50px',
-                                        cursor: 'pointer',
+                                        backgroundColor: "#BBDEFB",
+                                        width: "50px",
+                                        height: "50px",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        borderRadius: "50px",
+                                        cursor: "pointer",
                                       }}
                                     >
                                       <i className="bi bi-arrows-fullscreen"></i>
@@ -1001,29 +1000,29 @@ export default function Store() {
                                   <td>
                                     <div
                                       style={{
-                                        backgroundColor: '#BBDEFB',
-                                        width: '50px',
-                                        height: '50px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        borderRadius: '50px',
-                                        cursor: 'pointer',
+                                        backgroundColor: "#BBDEFB",
+                                        width: "50px",
+                                        height: "50px",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        borderRadius: "50px",
+                                        cursor: "pointer",
                                       }}
                                     >
                                       <i
                                         className="bi bi-messenger"
-                                        style={{ color: '#2979ff' }}
+                                        style={{ color: "#2979ff" }}
                                       ></i>
                                     </div>
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td colSpan={4} style={{ textAlign: 'left' }}>
-                                    {' '}
+                                  <td colSpan={4} style={{ textAlign: "left" }}>
+                                    {" "}
                                     <b
-                                      style={{ color: '#888' }}
+                                      style={{ color: "#888" }}
                                       id="telephone_client"
                                     >
                                       {order.User_phone}
@@ -1034,12 +1033,12 @@ export default function Store() {
                                   <td colSpan={4}>
                                     <div
                                       style={{
-                                        backgroundColor: 'rgb(255, 204, 153)',
-                                        borderRadius: '5',
-                                        height: '75px',
-                                        borderRadius: '5px',
-                                        textAlign: 'left',
-                                        padding: '5px',
+                                        backgroundColor: "rgb(255, 204, 153)",
+                                        borderRadius: "5",
+                                        height: "75px",
+                                        borderRadius: "5px",
+                                        textAlign: "left",
+                                        padding: "5px",
                                       }}
                                       id="commentaire_client"
                                     >
@@ -1050,36 +1049,36 @@ export default function Store() {
                               </tbody>
                             </Table>
                           </td>
-                          <td style={{ width: '25vh' }}>
+                          <td style={{ width: "25vh" }}>
                             <div
                               style={{
-                                height: '12vh',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '50px',
+                                height: "12vh",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderRadius: "50px",
                               }}
                             >
                               <div
                                 style={{
-                                  backgroundColor: 'rgb(47, 255, 64)',
-                                  width: '75px',
-                                  height: '75px',
-                                  padding: '5px',
-                                  borderRadius: '50px',
+                                  backgroundColor: "rgb(47, 255, 64)",
+                                  width: "75px",
+                                  height: "75px",
+                                  padding: "5px",
+                                  borderRadius: "50px",
                                 }}
                               >
                                 <div
                                   style={{
-                                    backgroundColor: 'white',
-                                    width: '65px',
-                                    height: '65px',
-                                    borderRadius: '50px',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+                                    backgroundColor: "white",
+                                    width: "65px",
+                                    height: "65px",
+                                    borderRadius: "50px",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                   }}
                                 >
                                   <h2>5</h2>
@@ -1088,28 +1087,28 @@ export default function Store() {
                             </div>
                             <div
                               style={{
-                                height: '12vh',
-                                marginTop: '5px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
+                                height: "12vh",
+                                marginTop: "5px",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
                               <div
                                 className="card-icon rounded-circle d-flex align-items-center justify-content-center"
                                 style={{
-                                  backgroundColor: '#ddd',
-                                  width: '70px',
-                                  height: '70px',
+                                  backgroundColor: "#ddd",
+                                  width: "70px",
+                                  height: "70px",
                                 }}
                               >
                                 <i
                                   className="bi bi-cart-check"
                                   style={{
-                                    color: '#333',
-                                    fontSize: '32px',
-                                    fontWeight: '400',
+                                    color: "#333",
+                                    fontSize: "32px",
+                                    fontWeight: "400",
                                   }}
                                 ></i>
                               </div>
@@ -1121,7 +1120,7 @@ export default function Store() {
                           <td
                             colSpan={2}
                             style={{
-                              textAlign: 'left',
+                              textAlign: "left",
                             }}
                           >
                             <div id="scroll_list_articles">
@@ -1154,19 +1153,21 @@ export default function Store() {
                             </div>
                           </td>
                         </tr>
-                        <tr style={{ textAlign: 'left' }}>
+                        <tr style={{ textAlign: "left" }}>
                           <td colSpan={2}>
                             <b>Total amount ($) : </b>
                             <b id="TotalAmount_Order">{order.Montant_total} </b>
                           </td>
                         </tr>
                         <tr>
-                          <td style={{ textAlign: 'center' }} colSpan={2}>
+                          <td style={{ textAlign: "center" }} colSpan={2}>
                             <button
                               className="btn btn-success"
-                              style={{ width: '50vh' }}
+                              style={{ width: "50vh" }}
                               id="validateOrder"
-                              onClick={() => UpdateOrders(order.Order_id)}
+                              onClick={() =>
+                                UpdateOrders(order.Order_id, "Finished")
+                              }
                             >
                               <i className="bi bi-cart-check"></i> Prêt à livrer
                             </button>
@@ -1182,14 +1183,99 @@ export default function Store() {
           <div className="etat_orders" id="ready_orders">
             <div
               style={{
-                color: 'white',
-                fontWeight: '500',
-                marginTop: '10px',
+                color: "white",
+                fontWeight: "500",
+                marginTop: "10px",
               }}
             >
               Prêt
             </div>
-            <div id="contenu_pret"></div>
+            <div id="contenu_pret">
+              {vita?.map((order) => {
+                return (
+                  <div key={order.Order_id} style={{ marginBottom: "20px" }}>
+                    <Table
+                      className="table-borderless"
+                      style={{
+                        backgroundColor: "rgb(60, 61, 66)",
+                        margin: "0",
+                        borderRadius: "5px",
+                        backgroundColor: "rgb(60, 61, 66)",
+                        color: "white",
+                      }}
+                    >
+                      <tbody
+                        style={{
+                          textAlign: "center",
+                        }}
+                      >
+                        <tr
+                          style={{
+                            textAlign: "left",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <td>
+                            <b id="numero_ticket">{order.Order_id}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <b id="intitule_client">{order.User_name}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: "70px",
+                                height: "70px",
+                                display: "flex",
+                                flexDirection: "column",
+                                backgroundColor: "rgb(32, 33, 37)",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                cursor: "pointer",
+                                borderRadius: "50px",
+                              }}
+                            >
+                              <i
+                                className="bi bi-car-front-fill"
+                                style={{
+                                  color: "white",
+                                  fontSize: "32px",
+                                  fontWeight: "400",
+                                }}
+                              ></i>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: "left" }}>
+                            {" "}
+                            <b
+                              style={{ color: "#888" }}
+                              id="telephone_client"
+                            ></b>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
