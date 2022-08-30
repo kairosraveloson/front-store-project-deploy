@@ -41,7 +41,8 @@
   height: auto;
 }
 
-#list_contenu_order_nouvelles {
+#list_contenu_order_nouvelles,
+#list_contenu_order_encours {
   overflow-x: hidden;
 }
 #list_contenu_order_encours {
@@ -51,6 +52,7 @@
   margin-left: 5px;
   border-radius: 5px 5px 0 0;
   width: auto;
+  overflow-y: auto;
   background-color: #fff;
 }
 #contenu_attente {
