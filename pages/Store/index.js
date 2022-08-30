@@ -50,7 +50,7 @@ export default function Store() {
     'https://eats-api-project.herokuapp.com/order',
     fetcher
   );
-  if (!data) return 'Loading the data ...';
+  if (!data) return 'Loading data ...';
   return (
     <>
       <Barre />
