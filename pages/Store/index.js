@@ -117,10 +117,10 @@ export default function Store() {
                             }}
                           >
                             <td>
-                              <b id="numero_ticket">#325</b>
+                              <b id="numero_ticket">#####</b>
                             </td>
                             <td>
-                              <b id="intitule_client">Client particulier</b>
+                              <b id="intitule_client">#####</b>
                             </td>
                             <td>
                               <div
@@ -169,7 +169,7 @@ export default function Store() {
                                 style={{ color: '#888' }}
                                 id="telephone_client"
                               >
-                                +261 39 45 789 68
+                                ##########
                               </b>
                             </td>
                           </tr>
@@ -204,7 +204,7 @@ export default function Store() {
                       >
                         <div
                           style={{
-                            backgroundColor: '#DDD',
+                            backgroundColor: 'rgb(47, 255, 64)',
                             width: '75px',
                             height: '75px',
                             padding: '5px',
