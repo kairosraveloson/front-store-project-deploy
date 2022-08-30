@@ -20,7 +20,30 @@
   background-color: rgb(32, 33, 37);
 }
 
-#list_contenu_order_nouvelles,
+#list_contenu_order_nouvelles {
+  height: 93%;
+  margin-top: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
+  border-radius: 5px 5px 0 0;
+  width: auto;
+  background-color: white;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.tab_list_contenu {
+  background-color: white;
+  border: 2px solid #ddd;
+  box-shadow: 0 0 2px 1px #ddd;
+  border-radius: 5px;
+  width: 74vh;
+  height: auto;
+}
+
+#list_contenu_order_nouvelles {
+  overflow-x: hidden;
+}
 #list_contenu_order_encours {
   height: 93%;
   margin-top: 10px;
@@ -30,7 +53,6 @@
   width: auto;
   background-color: #fff;
 }
-
 #contenu_attente {
   height: 93%;
   margin-top: 10px;
@@ -56,6 +78,7 @@
   width: 7%;
   background-color: rgb(32, 33, 37);
   transition: width 500ms;
+  display: none;
 }
 
 #incoming_orders {
