@@ -54,6 +54,7 @@
   width: auto;
   overflow-y: auto;
   background-color: #fff;
+  padding: 10px;
 }
 #contenu_attente {
   height: 93%;
