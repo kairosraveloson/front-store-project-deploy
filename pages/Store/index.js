@@ -47,7 +47,7 @@ export default function Store() {
     document.getElementById("").innerHTML = "";
   };
 
-  const { data } = useSWR("https://eats-api-project.herokuapp.com/order/", fetcher);
+  const { data } = useSWR("http://localhost:4000/order", fetcher);
   if (!data) return "Loading";
   return (
     <>
