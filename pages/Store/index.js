@@ -1168,7 +1168,7 @@ export default function Store() {
                               id="validateOrder"
                               onClick={() => UpdateOrders(order.Order_id)}
                             >
-                              <i class="bi bi-cart-check"></i> Prêt à livrer
+                              <i className="bi bi-cart-check"></i> Prêt à livrer
                             </button>
                           </td>
                         </tr>
