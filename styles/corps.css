@@ -3,7 +3,10 @@
   align-items: top;
   justify-content: top;
 }
-
+#contenu_attente_liste:hover {
+  color: white;
+  background-color: rgb(32, 33, 37);
+}
 #corps_orders {
   width: 100vw;
   /*margin-top: 6vh;*/
