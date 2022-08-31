@@ -79,7 +79,7 @@ export default function Store() {
     fetcher,
     { refreshInterval: 1000 }
   );
-  if (!andrasana && !mikarakara && !vita) return "<div
+  if (!andrasana && !mikarakara && !vita) return (<div
         className="main"
         style={{
           display: 'flex',
@@ -90,7 +90,7 @@ export default function Store() {
         }}
       >
         <Image src={lottieWelcome}></Image>
-      </div>";
+      </div>);
   return (
     <>
       <Barre />
