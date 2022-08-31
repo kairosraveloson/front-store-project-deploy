@@ -3,6 +3,7 @@ import Image from "next/image";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Barre from "../../component/barre";
 import { Table } from "reactstrap";
+import lottieWelcome from '../../src/images/load_data.gif';
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -78,7 +79,18 @@ export default function Store() {
     fetcher,
     { refreshInterval: 1000 }
   );
-  if (!andrasana && !mikarakara && !vita) return "Loading data ...";
+  if (!andrasana && !mikarakara && !vita) return "<div
+        className="main"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <Image src={lottieWelcome}></Image>
+      </div>";
   return (
     <>
       <Barre />
