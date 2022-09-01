@@ -7,6 +7,22 @@
   color: white;
   background-color: rgb(32, 33, 37);
 }
+
+.refus_order {
+  background-color: rgb(
+    206,
+    148,
+    148
+  ); /*rgb(194, 68, 68) and rgb(206, 148, 148)*/
+  line-height: 40px;
+  border-style: none;
+  border-radius: 5px;
+}
+
+.refus_order:hover {
+  background-color: rgb(194, 68, 68);
+  transition: background-color 500ms;
+}
 #corps_orders {
   width: 100vw;
   /*margin-top: 6vh;*/
