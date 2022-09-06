@@ -13,7 +13,7 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Store() {
   function changeOrderState() {
-    fetch('http://localhost:4000/order').then((result) => {
+    fetch('https://eats-api-project.herokuapp.com/order').then((result) => {
       result.json().then((resp) => {
         setOrder_State(resp);
       });
@@ -39,17 +39,17 @@ export default function Store() {
   }
 
   const { data: andrasana } = useSWR(
-    'http://localhost:4000/order/created',
+    'https://eats-api-project.herokuapp.com/order/created',
     fetcher,
     { refreshInterval: 1000 }
   );
   const { data: mikarakara } = useSWR(
-    'http://localhost:4000/order/accepted',
+    'https://eats-api-project.herokuapp.com/order/accepted',
     fetcher,
     { refreshInterval: 1000 }
   );
   const { data: vita } = useSWR(
-    'http://localhost:4000/order/finished',
+    'https://eats-api-project.herokuapp.com/order/finished',
     fetcher,
     { refreshInterval: 1000 }
   );
